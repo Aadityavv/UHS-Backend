@@ -28,8 +28,9 @@ import static com.infirmary.backend.shared.utility.FunctionUtil.createSuccessRes
 import java.lang.String;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
-
+import java.util.Collections;
 
 @RestController
 @RequestMapping(value = "/api/patient")
@@ -129,4 +130,11 @@ public class PatientController {
         return createSuccessResponse(response);
     }
 
+    // Admin-only endpoint to get total patient count
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @GetMapping("/count")
+    public ResponseEntity<Map<String, Long>> getPatientCount() {
+        long count = patientService.getTotalPatientCount();
+        return ResponseEntity.ok(Collections.singletonMap("count", count));
+    }
 }

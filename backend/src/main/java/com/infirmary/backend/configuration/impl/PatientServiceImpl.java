@@ -78,6 +78,11 @@ public class PatientServiceImpl implements PatientService {
     }
 
     @Override
+    public long getTotalPatientCount() {
+        return patientRepository.count();
+    }
+    
+    @Override
     public void validatePatientData(PatientDTO patientDTO) {
         if (!FunctionUtil.isValidId(patientDTO.getEmail())) {
             throw new IllegalArgumentException("Sap Id not found!");
@@ -269,4 +274,5 @@ public class PatientServiceImpl implements PatientService {
 
         return ResponseEntity.ok(resp);
     }
+    
 }

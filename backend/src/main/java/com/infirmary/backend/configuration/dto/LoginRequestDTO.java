@@ -13,7 +13,7 @@ public class LoginRequestDTO {
     private String password;
 
     public LoginRequestDTO(String email,String password){
-        this.email = email;
+        this.email = email.toLowerCase();
         this.password = password;
     }
 }

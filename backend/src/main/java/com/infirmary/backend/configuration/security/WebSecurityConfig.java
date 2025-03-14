@@ -5,6 +5,7 @@ import static com.infirmary.backend.shared.utility.FunctionUtil.passwordEncoder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.AuthenticationServiceException;
@@ -34,9 +35,11 @@ import com.infirmary.backend.configuration.securityimpl.PatientDetailsImpl;
 
 import jakarta.servlet.http.HttpServletRequest;
 
+import org.springframework.http.HttpMethod;
 import java.util.Arrays;
 import java.util.List;
 
+@SuppressWarnings("unused")
 @Configuration
 @EnableMethodSecurity
 public class WebSecurityConfig {
@@ -187,6 +190,8 @@ public class WebSecurityConfig {
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/auth/patient/**").permitAll()
+               .requestMatchers(HttpMethod.GET, "/api/patient/count").hasRole("ADMIN")
+                
                 .anyRequest().authenticated()
             )
             .addFilterBefore(authenticatioTokenFilterPatient(), UsernamePasswordAuthenticationFilter.class);

@@ -132,11 +132,45 @@ public class AuthServiceImpl implements AuthService{
             String fromAddress = "infirmarytest@gmail.com";
             String senderName = "UPES UHS";
             String subject = "Please verify your registration";
-            String content = "Dear [[name]],<br>"
-                    + "Please click the link below to verify your registration:<br>"
-                    + "<h3><a href=\"[[URL]]\" target=\"_self\">VERIFY</a></h3>"
-                    + "Thank you,<br>"
-                    + "UPES UHS.";
+            String content = """
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="color-scheme" content="light dark">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Your Email - UPES UHS</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, sans-serif; background-color: #f4f4f4; color: #333;">
+    <div style="max-width: 600px; margin: 50px auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+        <div style="background: linear-gradient(90deg, #6366f1 0%, #4f46e5 100%); color: #ffffff; text-align: center; padding: 30px;">
+            <h1 style="margin: 0; font-size: 24px;">Welcome to UPES UHS!</h1>
+            <p style="margin: 10px 0 0; font-size: 16px;">Your health, our priority.</p>
+        </div>
+        <div style="padding: 30px;">
+            <p style="font-size: 16px;">Hi [[name]],</p>
+            <p style="font-size: 16px; line-height: 1.5;">
+                Thanks for registering with <strong>UPES UHS</strong>. Please confirm your email address to complete your registration.
+            </p>
+            <div style="text-align: center; margin: 30px 0;">
+                <a href="[[URL]]" 
+                   style="background-color: #4f46e5; color: #ffffff; padding: 14px 28px; text-decoration: none; border-radius: 6px; font-size: 16px; display: inline-block; box-shadow: 0 2px 8px rgba(79,70,229,0.5);">
+                   Verify My Email
+                </a>
+            </div>
+            <p style="font-size: 14px; color: #888888;">
+                Didn’t sign up? If you didn't create this account, no further action is required.
+            </p>
+        </div>
+        <div style="background-color: #f4f4f4; text-align: center; padding: 20px; font-size: 12px; color: #999;">
+            &copy; 2025 UPES UHS. All rights reserved.
+        </div>
+    </div>
+</body>
+</html>
+""";
+
+
             
             MimeMessage message = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message);
@@ -144,9 +178,10 @@ public class AuthServiceImpl implements AuthService{
             helper.setFrom(fromAddress, senderName);
             helper.setTo(toAddress);
             helper.setSubject(subject);
+            helper.setText(content,true);
             
             content = content.replace("[[name]]", patient.getName());
-            String verifyURL = "http://ec2-13-201-227-93.ap-south-1.compute.amazonaws.com/api/auth/user" + "/verify?code=" + conformation.getConformationToken();
+            String verifyURL = "https://uhs-backend.onrender.com/api/auth/user" + "/verify?code=" + conformation.getConformationToken();
             
             content = content.replace("[[URL]]", verifyURL);
             
@@ -184,11 +219,45 @@ public class AuthServiceImpl implements AuthService{
             String fromAddress = "infirmarytest@gmail.com";
             String senderName = "UPES UHS";
             String subject = "Please verify your registration";
-            String content = "Dear [[name]],<br>"
-                    + "Please click the link below to verify your registration:<br>"
-                    + "<h3><a href=\"[[URL]]\" target=\"_self\">VERIFY</a></h3>"
-                    + "Thank you,<br>"
-                    + "UPES UHS.";
+            String content = """
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="color-scheme" content="light dark">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Your Email - UPES UHS</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, sans-serif; background-color: #f4f4f4; color: #333;">
+    <div style="max-width: 600px; margin: 50px auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+        <div style="background: linear-gradient(90deg, #6366f1 0%, #4f46e5 100%); color: #ffffff; text-align: center; padding: 30px;">
+            <h1 style="margin: 0; font-size: 24px;">Welcome to UPES UHS!</h1>
+            <p style="margin: 10px 0 0; font-size: 16px;">Your health, our priority.</p>
+        </div>
+        <div style="padding: 30px;">
+            <p style="font-size: 16px;">Hi [[name]],</p>
+            <p style="font-size: 16px; line-height: 1.5;">
+                Thanks for registering with <strong>UPES UHS</strong>. Please confirm your email address to complete your registration.
+            </p>
+            <div style="text-align: center; margin: 30px 0;">
+                <a href="[[URL]]" 
+                   style="background-color: #4f46e5; color: #ffffff; padding: 14px 28px; text-decoration: none; border-radius: 6px; font-size: 16px; display: inline-block; box-shadow: 0 2px 8px rgba(79,70,229,0.5);">
+                   Verify My Email
+                </a>
+            </div>
+            <p style="font-size: 14px; color: #888888;">
+                Didn’t sign up? If you didn't create this account, no further action is required.
+            </p>
+        </div>
+        <div style="background-color: #f4f4f4; text-align: center; padding: 20px; font-size: 12px; color: #999;">
+            &copy; 2025 UPES UHS. All rights reserved.
+        </div>
+    </div>
+</body>
+</html>
+""";
+
+
             
             MimeMessage message = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message);
@@ -196,9 +265,10 @@ public class AuthServiceImpl implements AuthService{
             helper.setFrom(fromAddress, senderName);
             helper.setTo(toAddress);
             helper.setSubject(subject);
+            helper.setText(content,true);
             
             content = content.replace("[[name]]", doctor.getName());
-            String verifyURL = "http://ec2-13-201-227-93.ap-south-1.compute.amazonaws.com/api/auth/user" + "/verify?code=" + conformation.getConformationToken();
+            String verifyURL = "https://uhs-backend.onrender.com/api/auth/user" + "/verify?code=" + conformation.getConformationToken();
             
             content = content.replace("[[URL]]", verifyURL);
             
@@ -233,11 +303,44 @@ public class AuthServiceImpl implements AuthService{
             String fromAddress = "infirmarytest@gmail.com";
             String senderName = "UPES UHS";
             String subject = "Please verify your registration";
-            String content = "Dear [[name]],<br>"
-                    + "Please click the link below to verify your registration:<br>"
-                    + "<h3><a href=\"[[URL]]\" target=\"_self\">VERIFY</a></h3>"
-                    + "Thank you,<br>"
-                    + "UPES UHS.";
+            String content = """
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="color-scheme" content="light dark">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Your Email - UPES UHS</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, sans-serif; background-color: #f4f4f4; color: #333;">
+    <div style="max-width: 600px; margin: 50px auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+        <div style="background: linear-gradient(90deg, #6366f1 0%, #4f46e5 100%); color: #ffffff; text-align: center; padding: 30px;">
+            <h1 style="margin: 0; font-size: 24px;">Welcome to UPES UHS!</h1>
+            <p style="margin: 10px 0 0; font-size: 16px;">Your health, our priority.</p>
+        </div>
+        <div style="padding: 30px;">
+            <p style="font-size: 16px;">Hi [[name]],</p>
+            <p style="font-size: 16px; line-height: 1.5;">
+                Thanks for registering with <strong>UPES UHS</strong>. Please confirm your email address to complete your registration.
+            </p>
+            <div style="text-align: center; margin: 30px 0;">
+                <a href="[[URL]]" 
+                   style="background-color: #4f46e5; color: #ffffff; padding: 14px 28px; text-decoration: none; border-radius: 6px; font-size: 16px; display: inline-block; box-shadow: 0 2px 8px rgba(79,70,229,0.5);">
+                   Verify My Email
+                </a>
+            </div>
+            <p style="font-size: 14px; color: #888888;">
+                Didn’t sign up? If you didn't create this account, no further action is required.
+            </p>
+        </div>
+        <div style="background-color: #f4f4f4; text-align: center; padding: 20px; font-size: 12px; color: #999;">
+            &copy; 2025 UPES UHS. All rights reserved.
+        </div>
+    </div>
+</body>
+</html>
+""";
+
             
             MimeMessage message = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message);
@@ -245,9 +348,10 @@ public class AuthServiceImpl implements AuthService{
             helper.setFrom(fromAddress, senderName);
             helper.setTo(toAddress);
             helper.setSubject(subject);
+            helper.setText(content,true);
             
             content = content.replace("[[name]]", ad.getName());
-            String verifyURL = "http://ec2-13-201-227-93.ap-south-1.compute.amazonaws.com/api/auth/user" + "/verify?code=" + conformation.getConformationToken();
+            String verifyURL = "https://uhs-backend.onrender.com/api/auth/user" + "/verify?code=" + conformation.getConformationToken();
             
             content = content.replace("[[URL]]", verifyURL);
             
@@ -328,11 +432,93 @@ public class AuthServiceImpl implements AuthService{
         }
 
         @Override
-        public String verifyUser(UUID code) {
-            Conformation conformation = conformationRepository.findById(code).orElseThrow(()-> new ResourceNotFoundException("Invalid Code"));
-            conformationRepository.delete(conformation);
-            return "Email Verified";
+public String verifyUser(UUID code) {
+    Conformation conformation = conformationRepository.findById(code)
+            .orElseThrow(() -> new ResourceNotFoundException("Invalid or expired verification link."));
+
+    // Delete conformation record to mark as verified
+    conformationRepository.delete(conformation);
+
+    // You can customize the redirect link below
+    String redirectUrl = "https://uhs-frontend.onrender.com"; // <-- Update to your actual login or dashboard link
+
+    String htmlContent = """
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Verified</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+            background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+            margin: 0;
+            padding: 0;
+            color: #333;
         }
+        .container {
+            max-width: 600px;
+            margin: 100px auto;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            text-align: center;
+            padding: 40px 30px;
+        }
+        .success-icon {
+            font-size: 80px;
+            color: #4BB543;
+            margin-bottom: 20px;
+        }
+        h1 {
+            margin-bottom: 10px;
+            font-size: 28px;
+            color: #333;
+        }
+        p {
+            font-size: 16px;
+            color: #666;
+        }
+        .btn {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 14px 28px;
+            font-size: 16px;
+            background-color: #4f46e5;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(79,70,229,0.5);
+            transition: background-color 0.3s ease;
+        }
+        .btn:hover {
+            background-color: #4338ca;
+        }
+        .footer {
+            margin-top: 40px;
+            font-size: 12px;
+            color: #aaa;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="success-icon">✅</div>
+        <h1>Email Verified Successfully!</h1>
+        <p>Thank you for verifying your email. Your account is now active and ready to use.</p>
+        <a href="%s" class="btn">Go to Login</a>
+        <div class="footer">
+            &copy; 2025 UPES UHS. All rights reserved.
+        </div>
+    </div>
+</body>
+</html>
+""".formatted(redirectUrl);
+
+    return htmlContent;
+}
+
 
         @Override
         public String forgetPassPat(String email) throws UnsupportedEncodingException, MessagingException {
@@ -368,7 +554,7 @@ public class AuthServiceImpl implements AuthService{
             helper.setSubject(subject);
             
             content = content.replace("[[name]]", patient.getName());
-            String verifyURL = "http://ec2-13-232-83-190.ap-south-1.compute.amazonaws.com/pass-change" + "?code=" + newPassChange.getChangeCode() + "&role=patient";
+            String verifyURL = "https://uhs-backend.onrender.com/pass-change" + "?code=" + newPassChange.getChangeCode() + "&role=patient";
             
             content = content.replace("[[URL]]", verifyURL);
             
@@ -415,7 +601,7 @@ public class AuthServiceImpl implements AuthService{
             helper.setSubject(subject);
             
             content = content.replace("[[name]]", doctor.getName());
-            String verifyURL = "http://ec2-13-232-83-190.ap-south-1.compute.amazonaws.com/pass-change" + "?code=" + newPassChange.getChangeCode() + "&role=doctor";
+            String verifyURL = "https://uhs-backend.onrender.com/pass-change" + "?code=" + newPassChange.getChangeCode() + "&role=doctor";
             
             content = content.replace("[[URL]]", verifyURL);
             
@@ -462,7 +648,7 @@ public class AuthServiceImpl implements AuthService{
             helper.setSubject(subject);
             
             content = content.replace("[[name]]", ad.getName());
-            String verifyURL = "http://ec2-13-232-83-190.ap-south-1.compute.amazonaws.com/pass-change" + "?code=" + newPassChange.getChangeCode() + "&role=ad";
+            String verifyURL = "https://uhs-backend.onrender.com/pass-change" + "?code=" + newPassChange.getChangeCode() + "&role=ad";
             
             content = content.replace("[[URL]]", verifyURL);
             

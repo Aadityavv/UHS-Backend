@@ -82,4 +82,8 @@ public interface AppointmentRepository extends JpaRepository<Appointment, UUID> 
                "GROUP BY a.date, l.location_name", nativeQuery = true)
     List<Object[]> countAppointmentsByDate(@Param("startDate") LocalDate startDate);
 
+    @Query("SELECT a FROM Appointment a WHERE a.doctor IS NULL AND a.prescription IS NULL")
+    List<Appointment> findAllPendingAppointments();
+
+
 }

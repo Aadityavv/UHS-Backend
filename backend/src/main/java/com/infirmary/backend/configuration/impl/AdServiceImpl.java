@@ -187,7 +187,13 @@ public class AdServiceImpl implements ADService{
     //Reject appointment for a patient by AD
     @Override
     public String rejectAppointment(String email) throws IOException {
-        email = email.substring(0,email.indexOf("@")).concat(email.substring(email.indexOf("@")).replaceAll(",", "."));
+        if (email.contains(",")) {
+            email = email.replace(",", ".");
+        }
+        if (!email.contains("@")) {
+            throw new IllegalArgumentException("Invalid email format: " + email);
+        }
+            
 
         CurrentAppointment currentAppointment = currentAppointmentRepository.findByPatient_Email(email).orElseThrow(() -> new ResourceNotFoundException("No Appointment Scheduled"));
 

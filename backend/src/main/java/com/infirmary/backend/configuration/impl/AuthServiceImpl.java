@@ -439,7 +439,7 @@ public String verifyUser(UUID code) {
     // Delete conformation record to mark as verified
     conformationRepository.delete(conformation);
 
-    String redirectUrl = "https://uhs-frontend.vercel.app";
+    String redirectUrl = "https://uhs.vercel.app";
 
 String htmlContent = """
 <!DOCTYPE html>

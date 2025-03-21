@@ -439,10 +439,9 @@ public String verifyUser(UUID code) {
     // Delete conformation record to mark as verified
     conformationRepository.delete(conformation);
 
-    // You can customize the redirect link below
-    String redirectUrl = "https://uhs-frontend.onrender.com"; // <-- Update to your actual login or dashboard link
+    String redirectUrl = "https://uhs-frontend.onrender.com";
 
-    String htmlContent = """
+String htmlContent = """
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -452,7 +451,7 @@ public String verifyUser(UUID code) {
     <style>
         body {
             font-family: 'Segoe UI', Roboto, Arial, sans-serif;
-            background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+            background: linear-gradient(135deg, #6366f1 0%%, #4f46e5 100%%);
             margin: 0;
             padding: 0;
             color: #333;
@@ -515,6 +514,7 @@ public String verifyUser(UUID code) {
 </body>
 </html>
 """.formatted(redirectUrl);
+
 
     return htmlContent;
 }

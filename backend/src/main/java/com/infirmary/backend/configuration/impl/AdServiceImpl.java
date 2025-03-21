@@ -18,11 +18,8 @@ import java.util.TimeZone;
 import java.util.UUID;
 
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.infirmary.backend.configuration.dto.AdHocSubmitDTO;
 import com.infirmary.backend.configuration.dto.AdSubmitReqDTO;
@@ -53,9 +50,7 @@ import com.infirmary.backend.shared.utility.AppointmentQueueManager;
 import com.infirmary.backend.shared.utility.FunctionUtil;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AdServiceImpl implements ADService{
@@ -70,7 +65,6 @@ public class AdServiceImpl implements ADService{
     private final AdRepository adRepository;
     private final PatientRepository patientRepository;
     private final AdPrescriptionRepository adPrescriptionRepository;
-    
 
     //Get The queue pending appointment of doctor
     public ResponseEntity<?> getQueue(Double latitude,Double longitude){
@@ -110,7 +104,8 @@ public class AdServiceImpl implements ADService{
 
     // Get Patient Submitted Form of the Patient which they initially submit
     public ResponseEntity<?> getPatientFormDetails(String sapEmail){
-        sapEmail = sapEmail.replace(",", ".").toLowerCase();
+        sapEmail = sapEmail.substring(0,sapEmail.indexOf("@")).concat(sapEmail.substring(sapEmail.indexOf("@")).replaceAll(",", "."));
+
         CurrentAppointment currentAppointment = currentAppointmentRepository.findByPatient_Email(sapEmail).orElseThrow(() -> new ResourceNotFoundException("No Appointemnt Found"));
 
         if(currentAppointment.getAppointment() == null) throw new ResourceNotFoundException("No Appointment Scheduled");
@@ -190,81 +185,57 @@ public class AdServiceImpl implements ADService{
     }
 
     //Reject appointment for a patient by AD
-
-    @Transactional
     @Override
     public String rejectAppointment(String email) throws IOException {
-        try {
-            final String normalizedEmail = email.replace(",", ".").toLowerCase();
+        email = email.substring(0,email.indexOf("@")).concat(email.substring(email.indexOf("@")).replaceAll(",", "."));
 
-            log.info("Rejecting appointment for email: {}", normalizedEmail);
+        CurrentAppointment currentAppointment = currentAppointmentRepository.findByPatient_Email(email).orElseThrow(() -> new ResourceNotFoundException("No Appointment Scheduled"));
 
-            CurrentAppointment currentAppointment = currentAppointmentRepository.findByPatient_Email(normalizedEmail)
-                    .orElseThrow(() -> new ResourceNotFoundException("No Appointment Scheduled for email: " + normalizedEmail));
+        if(currentAppointment.getAppointment() == null) throw new ResourceNotFoundException("No Apointment Scheduled");
 
-            if (currentAppointment.getAppointment() == null) {
-                throw new ResourceNotFoundException("No Appointment Scheduled for email: " + normalizedEmail);
-            }
+        saveToJSON(currentAppointment.getAppointment());
 
-            saveToJSON(currentAppointment.getAppointment());
+        Appointment appointment = appointmentRepository.findByAppointmentId(currentAppointment.getAppointment().getAppointmentId());
 
-            Appointment appointment = appointmentRepository.findByAppointmentId(currentAppointment.getAppointment().getAppointmentId());
-            if (appointment == null) {
-                throw new ResourceNotFoundException("Appointment not found in repository for email: " + normalizedEmail);
-            }
+        if(currentAppointment.getAppointment().getDoctor() == null) AppointmentQueueManager.removeElement(currentAppointment.getAppointment().getAppointmentId());
+        else AppointmentQueueManager.removeApptEl(currentAppointment.getAppointment().getAppointmentId());
 
-            if (currentAppointment.getAppointment().getDoctor() == null) {
-                AppointmentQueueManager.removeElement(currentAppointment.getAppointment().getAppointmentId());
-            } else {
-                AppointmentQueueManager.removeApptEl(currentAppointment.getAppointment().getAppointmentId());
-            }
-
-            if (currentAppointment.getDoctor() != null) {
-                Doctor doctor = doctorRepository.findById(currentAppointment.getDoctor().getDoctorId())
-                        .orElseThrow(() -> new ResourceNotFoundException("No Such Doctor Found"));
-                doctor.setStatus(true);
-                doctorRepository.save(doctor);
-                currentAppointment.setDoctor(null);
-            }
-
-            if (currentAppointment.getAppointment().getPrescription() != null) {
-                Prescription prescription = prescriptionRepository.findById(currentAppointment.getAppointment().getPrescription().getPrescriptionId())
-                        .orElseThrow(() -> new ResourceNotFoundException("No Prescription Found"));
-
-                if (currentAppointment.getAppointment().getPrescription().getMedicine() != null) {
-                    List<UUID> delList = new ArrayList<>();
-                    for (PrescriptionMeds med : currentAppointment.getAppointment().getPrescription().getMedicine()) {
-                        delList.add(med.getPresMedicineId());
-                    }
-                    prescription.setMedicine(null);
-                    prescriptionMedsRepository.deleteAllById(delList);
-                }
-
-                appointment.setPrescription(null);
-                prescriptionRepository.delete(prescription);
-            }
-
-            if (currentAppointment.getAppointment().getAptForm() != null) {
-                AppointmentForm appointmentForm = appointmentFormRepository.findById(currentAppointment.getAppointment().getAptForm().getId())
-                        .orElseThrow(() -> new ResourceNotFoundException("No Appointment Form Found"));
-                appointment.setAptForm(null);
-                appointmentFormRepository.delete(appointmentForm);
-            }
-
-            currentAppointment.setAppointment(null);
-            appointmentRepository.deleteById(appointment.getAppointmentId());
-            currentAppointmentRepository.save(currentAppointment);
-
-            log.info("Appointment rejected successfully for email: {}", normalizedEmail);
-            return "Patient Appointment Rejected";
-
-        } catch (ResourceNotFoundException e) {
-            log.error("Resource not found during rejectAppointment: {}", e.getMessage());
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        } catch (Exception e) {
-            log.error("Unexpected error during rejectAppointment: {}", e.getMessage(), e);
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "An error occurred while rejecting the appointment");
+        if(currentAppointment.getDoctor() != null){
+            Doctor doctor = doctorRepository.findById(currentAppointment.getDoctor().getDoctorId()).orElseThrow(()->new ResourceNotFoundException("No Such Doctor"));
+            doctor.setStatus(true);
+            doctorRepository.save(doctor);
         }
+        currentAppointment.setDoctor(null);
+
+        if(currentAppointment.getAppointment().getPrescription() != null){
+            Prescription prescription = prescriptionRepository.findById(currentAppointment.getAppointment().getPrescription().getPrescriptionId()).orElseThrow(()->new ResourceNotFoundException("No Prescription Found"));
+            
+            if(currentAppointment.getAppointment().getPrescription().getMedicine() != null){
+                List<UUID> delList = new ArrayList<>();
+                for(PrescriptionMeds med: currentAppointment.getAppointment().getPrescription().getMedicine()){
+                    delList.add(med.getPresMedicineId());
+                }
+                prescription.setMedicine(null);
+                prescriptionMedsRepository.deleteAll(prescriptionMedsRepository.findAllById(delList));
+            }
+
+            appointment.setPrescription(null);
+
+            prescriptionRepository.delete(prescription);
+            
+        } 
+        
+        if(currentAppointment.getAppointment().getAptForm() != null){
+            AppointmentForm appointmentForm = appointmentFormRepository.findById(currentAppointment.getAppointment().getAptForm().getId()).orElseThrow(()->new ResourceNotFoundException("No Appointment Form Found"));
+            appointment.setAptForm(null);
+            appointmentFormRepository.delete(appointmentForm);
+        }
+        currentAppointment.setAppointment(null);
+        
+        appointmentRepository.deleteById(appointment.getAppointmentId());
+
+        currentAppointmentRepository.save(currentAppointment);
+        return "Patient Appointment Rejected";
     }
 
     //Set Doctor status by AD
@@ -306,36 +277,36 @@ public class AdServiceImpl implements ADService{
     //Complete a appointment for a patient
     @Override
     public String completeAppointment(String sapEmail) {
-        final String normalizedEmail = sapEmail.replace(",", ".").toLowerCase();
+        sapEmail = sapEmail.substring(0,sapEmail.indexOf("@")).concat(sapEmail.substring(sapEmail.indexOf("@")).replaceAll(",", "."));
 
-        CurrentAppointment currentAppointment = currentAppointmentRepository.findByPatient_Email(normalizedEmail)
-                .orElseThrow(() -> new ResourceNotFoundException("No Appointment Scheduled for email: " + normalizedEmail));
+        CurrentAppointment currentAppointment = currentAppointmentRepository.findByPatient_Email(sapEmail).orElseThrow(()->new ResourceNotFoundException("No Appointment Scheduled"));
 
-        if (currentAppointment.getAppointment() == null)
-            throw new ResourceNotFoundException("No Appointment Scheduled for email: " + normalizedEmail);
+        if(currentAppointment.getAppointment() == null) throw new ResourceNotFoundException("No Appointment Scheduled");
 
         List<PrescriptionMeds> medLst = new ArrayList<>(currentAppointment.getAppointment().getPrescription().getMedicine());
+        
         List<Stock> stocks = new ArrayList<>();
 
-        for (PrescriptionMeds meds : medLst) {
-            Stock stock = stockRepository.findById(meds.getMedicine().getId())
-                    .orElseThrow(() -> new ResourceNotFoundException("No Such Medicine Exists"));
-            Integer medQty = (int) Math.ceil((meds.getDosageAfternoon() + meds.getDosageEvening() + meds.getDosageMorning()) * meds.getDuration());
+        for(PrescriptionMeds meds:medLst){
+            Stock stock = stockRepository.findById(meds.getMedicine().getId()).orElseThrow(()->new ResourceNotFoundException("No Such Medicine Exists"));
 
-            if (stock.getQuantity() - medQty < 0)
-                throw new IllegalArgumentException("Medicine Quantity Not Enough");
+            Integer medQty = (int) Math.ceil((meds.getDosageAfternoon()+meds.getDosageEvening()+meds.getDosageMorning())*meds.getDuration());
 
-            stock.setQuantity(stock.getQuantity() - medQty);
+            if(stock.getQuantity() - (medQty)<0) throw new IllegalArgumentException("Medicine Quantity Not Enough");
+
+            stock.setQuantity(stock.getQuantity() - (medQty));
+
             stocks.add(stock);
         }
 
         stockRepository.saveAll(stocks);
-        AppointmentQueueManager.removeApptEl(currentAppointment.getAppointment().getAppointmentId());
 
+        AppointmentQueueManager.removeApptEl(currentAppointment.getAppointment().getAppointmentId());
+        
         currentAppointment.setAppointment(null);
+
         currentAppointmentRepository.save(currentAppointment);
 
-        log.info("Completed appointment for patient email: {}", normalizedEmail);
         return "Appointment Completed";
     }
 
@@ -492,7 +463,5 @@ public class AdServiceImpl implements ADService{
 
         return "Patient Reassigned";
     }
-
-    
 
 }

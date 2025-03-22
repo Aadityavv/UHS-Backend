@@ -488,11 +488,11 @@ String htmlContent = """
             color: #fff;
             text-decoration: none;
             border-radius: 6px;
-            box-shadow: 0 4px 12px rgba(79,70,229,0.5);
-            transition: background-color 0.3s ease;
+            box-shadow: 0 5px 10px 1px rgba(161, 156, 255, 0.5);
+            transition: background-color 0.5s ease;
         }
         .btn:hover {
-            background-color: #4338ca;
+            background-color: #04021b;
         }
         .footer {
             margin-top: 40px;

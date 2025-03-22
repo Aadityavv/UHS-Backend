@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.nio.channels.FileChannel;
 import java.util.Objects;
 
 @Component
@@ -29,7 +30,7 @@ public class FunctionUtil {
 
     private static Integer radiusAllow = 200;
 
-    private static final String FILE_PATH = "/tmp/deleted.json";
+    private static final String FILE_PATH = "./src/main/resources/Deleted/deleted.json";
 
     public static <T> ResponseEntity<?> createSuccessResponse(T data, HttpHeaders... header) {
         if (header.length > 0) {
@@ -38,38 +39,45 @@ public class FunctionUtil {
         return new ResponseEntity<>(data, HttpStatus.OK);
     }
 
-    public static void saveToJSON(Appointment appointment) throws IOException {
+    public static void saveToJSON(Appointment appointment) throws IOException{
+        // Create ObjectMapper and register JavaTimeModule for Java 8 date/time support
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
-    
+
         DeleteAptSave object = new DeleteAptSave(appointment);
-        
+
         File file = new File(FILE_PATH);
-    
+
         if (!file.exists() || file.length() == 0) {
-            // Create a new JSON array with the first item
+            // If the file doesn't exist or is empty, create a new JSON array
             try (FileOutputStream fos = new FileOutputStream(file)) {
-                fos.write("[".getBytes());
-                mapper.writeValue(fos, object);
-                fos.write("]".getBytes());
+                fos.write("[".getBytes()); // Start the array
+                mapper.writeValue(fos, object); // Write the object
             }
         } else {
-            // Open the file, remove the closing bracket, append a new object, then re-close
-            RandomAccessFile raf = new RandomAccessFile(file, "rw");
-            long length = raf.length();
-            raf.setLength(length - 1); // remove the closing bracket ']'
-            raf.close();
-    
-            try (FileOutputStream fos = new FileOutputStream(file, true)) {
-                fos.write(",".getBytes());
-                mapper.writeValue(fos, object);
-                fos.write("]".getBytes()); // re-add closing bracket
+            // If the file exists and is non-empty
+            try (RandomAccessFile raf = new RandomAccessFile(file, "rw");
+                 FileChannel channel = raf.getChannel()) {
+
+                // Move to the position before the last bracket
+                long fileLength = file.length();
+                channel.truncate(fileLength - 1);
+
+                // Add a comma separator
+                try (FileOutputStream fos = new FileOutputStream(file, true)) {
+                    fos.write(",".getBytes());
+                    mapper.writeValue(fos, object); // Append the new object
+                }
             }
         }
-    
-        System.out.println("✅ Appointment successfully saved to /tmp/deleted.json");
+
+        try (FileOutputStream fos = new FileOutputStream(file,true)) {
+            fos.write("]".getBytes()); // Close the array
+            fos.close();
+        }
+
     }
-    
+
     public static boolean isNameInvalid(String name) {
         return Objects.isNull(name)
                 || name.length() <= MIN_NAME_LENGTH

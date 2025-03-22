@@ -136,36 +136,48 @@ public class AuthServiceImpl implements AuthService{
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="color-scheme" content="light dark">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Verify Your Email - UPES UHS</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Verify Your Email - UPES UHS</title>
 </head>
-<body style="margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, sans-serif; background-color: #f4f4f4; color: #333;">
-    <div style="max-width: 600px; margin: 50px auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
-        <div style="background: linear-gradient(90deg, #6366f1 0%, #4f46e5 100%); color: #ffffff; text-align: center; padding: 30px;">
-            <h1 style="margin: 0; font-size: 24px;">Welcome to UPES UHS!</h1>
-            <p style="margin: 10px 0 0; font-size: 16px;">Your health, our priority.</p>
-        </div>
-        <div style="padding: 30px;">
-            <p style="font-size: 16px;">Hi [[name]],</p>
-            <p style="font-size: 16px; line-height: 1.5;">
-                Thanks for registering with <strong>UPES UHS</strong>. Please confirm your email address to complete your registration.
-            </p>
-            <div style="text-align: center; margin: 30px 0;">
-                <a href="[[URL]]" 
-                   style="background-color: #4f46e5; color: #ffffff; padding: 14px 28px; text-decoration: none; border-radius: 6px; font-size: 16px; display: inline-block; box-shadow: 0 2px 8px rgba(79,70,229,0.5);">
-                   Verify My Email
+<body style="margin:0; padding:0; background-color:#f4f4f4; font-family:'Segoe UI', Roboto, sans-serif; color:#333;">
+  <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td align="center" style="padding: 40px 0;">
+        <table border="0" cellpadding="0" cellspacing="0" width="600" style="background-color:#ffffff; border-radius:8px; overflow:hidden; box-shadow:0 4px 12px rgba(0,0,0,0.1);">
+          <tr>
+            <td align="center" bgcolor="#4f46e5" style="padding:40px 20px;">
+              <h1 style="margin:0; color:#ffffff;">Welcome to UPES UHS!</h1>
+              <p style="margin:8px 0 0; color:#e0e0e0;">Your health, our priority.</p>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:30px;">
+              <p style="font-size:16px;">Hello <strong>[[name]]</strong>,</p>
+              <p style="font-size:16px; line-height:1.5;">
+                Thank you for registering with <strong>UPES UHS</strong>. Please verify your email address to complete your registration.
+              </p>
+              <p style="text-align:center; margin:30px 0;">
+                <a href="[[URL]]" style="background-color:#4f46e5; color:#ffffff; padding:14px 28px; text-decoration:none; border-radius:6px; display:inline-block; font-size:16px;">
+                  Verify My Email
                 </a>
-            </div>
-            <p style="font-size: 14px; color: #888888;">
-                Didn’t sign up? If you didn't create this account, no further action is required.
-            </p>
-        </div>
-        <div style="background-color: #f4f4f4; text-align: center; padding: 20px; font-size: 12px; color: #999;">
-            &copy; 2025 UPES UHS. All rights reserved.
-        </div>
-    </div>
+              </p>
+              <p style="font-size:14px; color:#888;">
+                If you did not sign up for this account, you can safely ignore this email.
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td bgcolor="#f4f4f4" style="padding:20px; text-align:center; font-size:12px; color:#999;">
+              &copy; 2025 UPES UHS. All rights reserved.<br/>
+              UPES University, Bidholi, Dehradun, Uttarakhand 248007<br/>
+              
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
 </body>
 </html>
 """;
@@ -178,7 +190,6 @@ public class AuthServiceImpl implements AuthService{
             helper.setFrom(fromAddress, senderName);
             helper.setTo(toAddress);
             helper.setSubject(subject);
-            helper.setText(content,true);
             
             content = content.replace("[[name]]", patient.getName());
             String verifyURL = "https://uhs-backend.onrender.com/api/auth/user" + "/verify?code=" + conformation.getConformationToken();
@@ -223,36 +234,48 @@ public class AuthServiceImpl implements AuthService{
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="color-scheme" content="light dark">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Verify Your Email - UPES UHS</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Verify Your Email - UPES UHS</title>
 </head>
-<body style="margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, sans-serif; background-color: #f4f4f4; color: #333;">
-    <div style="max-width: 600px; margin: 50px auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
-        <div style="background: linear-gradient(90deg, #6366f1 0%, #4f46e5 100%); color: #ffffff; text-align: center; padding: 30px;">
-            <h1 style="margin: 0; font-size: 24px;">Welcome to UPES UHS!</h1>
-            <p style="margin: 10px 0 0; font-size: 16px;">Your health, our priority.</p>
-        </div>
-        <div style="padding: 30px;">
-            <p style="font-size: 16px;">Hi [[name]],</p>
-            <p style="font-size: 16px; line-height: 1.5;">
-                Thanks for registering with <strong>UPES UHS</strong>. Please confirm your email address to complete your registration.
-            </p>
-            <div style="text-align: center; margin: 30px 0;">
-                <a href="[[URL]]" 
-                   style="background-color: #4f46e5; color: #ffffff; padding: 14px 28px; text-decoration: none; border-radius: 6px; font-size: 16px; display: inline-block; box-shadow: 0 2px 8px rgba(79,70,229,0.5);">
-                   Verify My Email
+<body style="margin:0; padding:0; background-color:#f4f4f4; font-family:'Segoe UI', Roboto, sans-serif; color:#333;">
+  <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td align="center" style="padding: 40px 0;">
+        <table border="0" cellpadding="0" cellspacing="0" width="600" style="background-color:#ffffff; border-radius:8px; overflow:hidden; box-shadow:0 4px 12px rgba(0,0,0,0.1);">
+          <tr>
+            <td align="center" bgcolor="#4f46e5" style="padding:40px 20px;">
+              <h1 style="margin:0; color:#ffffff;">Welcome to UPES UHS!</h1>
+              <p style="margin:8px 0 0; color:#e0e0e0;">Your health, our priority.</p>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:30px;">
+              <p style="font-size:16px;">Hello <strong>[[name]]</strong>,</p>
+              <p style="font-size:16px; line-height:1.5;">
+                Thank you for registering with <strong>UPES UHS</strong>. Please verify your email address to complete your registration.
+              </p>
+              <p style="text-align:center; margin:30px 0;">
+                <a href="[[URL]]" style="background-color:#4f46e5; color:#ffffff; padding:14px 28px; text-decoration:none; border-radius:6px; display:inline-block; font-size:16px;">
+                  Verify My Email
                 </a>
-            </div>
-            <p style="font-size: 14px; color: #888888;">
-                Didn’t sign up? If you didn't create this account, no further action is required.
-            </p>
-        </div>
-        <div style="background-color: #f4f4f4; text-align: center; padding: 20px; font-size: 12px; color: #999;">
-            &copy; 2025 UPES UHS. All rights reserved.
-        </div>
-    </div>
+              </p>
+              <p style="font-size:14px; color:#888;">
+                If you did not sign up for this account, you can safely ignore this email.
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td bgcolor="#f4f4f4" style="padding:20px; text-align:center; font-size:12px; color:#999;">
+              &copy; 2025 UPES UHS. All rights reserved.<br/>
+              UPES University, Bidholi, Dehradun, Uttarakhand 248007<br/>
+              
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
 </body>
 </html>
 """;
@@ -265,7 +288,6 @@ public class AuthServiceImpl implements AuthService{
             helper.setFrom(fromAddress, senderName);
             helper.setTo(toAddress);
             helper.setSubject(subject);
-            helper.setText(content,true);
             
             content = content.replace("[[name]]", doctor.getName());
             String verifyURL = "https://uhs-backend.onrender.com/api/auth/user" + "/verify?code=" + conformation.getConformationToken();
@@ -307,36 +329,48 @@ public class AuthServiceImpl implements AuthService{
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="color-scheme" content="light dark">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Verify Your Email - UPES UHS</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Verify Your Email - UPES UHS</title>
 </head>
-<body style="margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, sans-serif; background-color: #f4f4f4; color: #333;">
-    <div style="max-width: 600px; margin: 50px auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
-        <div style="background: linear-gradient(90deg, #6366f1 0%, #4f46e5 100%); color: #ffffff; text-align: center; padding: 30px;">
-            <h1 style="margin: 0; font-size: 24px;">Welcome to UPES UHS!</h1>
-            <p style="margin: 10px 0 0; font-size: 16px;">Your health, our priority.</p>
-        </div>
-        <div style="padding: 30px;">
-            <p style="font-size: 16px;">Hi [[name]],</p>
-            <p style="font-size: 16px; line-height: 1.5;">
-                Thanks for registering with <strong>UPES UHS</strong>. Please confirm your email address to complete your registration.
-            </p>
-            <div style="text-align: center; margin: 30px 0;">
-                <a href="[[URL]]" 
-                   style="background-color: #4f46e5; color: #ffffff; padding: 14px 28px; text-decoration: none; border-radius: 6px; font-size: 16px; display: inline-block; box-shadow: 0 2px 8px rgba(79,70,229,0.5);">
-                   Verify My Email
+<body style="margin:0; padding:0; background-color:#f4f4f4; font-family:'Segoe UI', Roboto, sans-serif; color:#333;">
+  <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td align="center" style="padding: 40px 0;">
+        <table border="0" cellpadding="0" cellspacing="0" width="600" style="background-color:#ffffff; border-radius:8px; overflow:hidden; box-shadow:0 4px 12px rgba(0,0,0,0.1);">
+          <tr>
+            <td align="center" bgcolor="#4f46e5" style="padding:40px 20px;">
+              <h1 style="margin:0; color:#ffffff;">Welcome to UPES UHS!</h1>
+              <p style="margin:8px 0 0; color:#e0e0e0;">Your health, our priority.</p>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:30px;">
+              <p style="font-size:16px;">Hello <strong>[[name]]</strong>,</p>
+              <p style="font-size:16px; line-height:1.5;">
+                Thank you for registering with <strong>UPES UHS</strong>. Please verify your email address to complete your registration.
+              </p>
+              <p style="text-align:center; margin:30px 0;">
+                <a href="[[URL]]" style="background-color:#4f46e5; color:#ffffff; padding:14px 28px; text-decoration:none; border-radius:6px; display:inline-block; font-size:16px;">
+                  Verify My Email
                 </a>
-            </div>
-            <p style="font-size: 14px; color: #888888;">
-                Didn’t sign up? If you didn't create this account, no further action is required.
-            </p>
-        </div>
-        <div style="background-color: #f4f4f4; text-align: center; padding: 20px; font-size: 12px; color: #999;">
-            &copy; 2025 UPES UHS. All rights reserved.
-        </div>
-    </div>
+              </p>
+              <p style="font-size:14px; color:#888;">
+                If you did not sign up for this account, you can safely ignore this email.
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td bgcolor="#f4f4f4" style="padding:20px; text-align:center; font-size:12px; color:#999;">
+              &copy; 2025 UPES UHS. All rights reserved.<br/>
+              UPES University, Bidholi, Dehradun, Uttarakhand 248007<br/>
+              
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
 </body>
 </html>
 """;
@@ -348,7 +382,6 @@ public class AuthServiceImpl implements AuthService{
             helper.setFrom(fromAddress, senderName);
             helper.setTo(toAddress);
             helper.setSubject(subject);
-            helper.setText(content,true);
             
             content = content.replace("[[name]]", ad.getName());
             String verifyURL = "https://uhs-backend.onrender.com/api/auth/user" + "/verify?code=" + conformation.getConformationToken();
@@ -540,11 +573,54 @@ String htmlContent = """
             String fromAddress = "infirmarytest@gmail.com";
             String senderName = "UPES UHS";
             String subject = "Password Change";
-            String content = "Dear [[name]],<br>"
-                    + "Please click the link below to change your password:<br>"
-                    + "<h3><a href=\"[[URL]]\" target=\"_self\">PASSWORD CHANGE</a></h3>"
-                    + "Thank you,<br>"
-                    + "UPES UHS.";
+            String content = """
+            <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Reset Your Password - UPES UHS</title>
+</head>
+<body style="margin:0; padding:0; background-color:#f4f4f4; font-family:'Segoe UI', Roboto, sans-serif; color:#333;">
+  <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td align="center" style="padding: 40px 0;">
+        <table border="0" cellpadding="0" cellspacing="0" width="600" style="background-color:#ffffff; border-radius:8px; overflow:hidden; box-shadow:0 4px 12px rgba(0,0,0,0.1);">
+          <tr>
+            <td align="center" bgcolor="#4f46e5" style="padding:40px 20px;">
+              <h1 style="margin:0; color:#ffffff;">Reset Your Password</h1>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:30px;">
+              <p style="font-size:16px;">Hello <strong>[[name]]</strong>,</p>
+              <p style="font-size:16px; line-height:1.5;">
+                You requested to reset your password. Click the button below to proceed.
+              </p>
+              <p style="text-align:center; margin:30px 0;">
+                <a href="[[URL]]" style="background-color:#4f46e5; color:#ffffff; padding:14px 28px; text-decoration:none; border-radius:6px; display:inline-block; font-size:16px;">
+                  Reset Password
+                </a>
+              </p>
+              <p style="font-size:14px; color:#888;">
+                If you did not request a password reset, please ignore this email or contact support.
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td bgcolor="#f4f4f4" style="padding:20px; text-align:center; font-size:12px; color:#999;">
+              &copy; 2025 UPES UHS. All rights reserved.<br/>
+              UPES University, Bidholi, Dehradun, Uttarakhand 248007<br/>
+              
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
+""";
             
             MimeMessage message = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message);
@@ -587,11 +663,55 @@ String htmlContent = """
             String fromAddress = "infirmarytest@gmail.com";
             String senderName = "UPES UHS";
             String subject = "Password Change";
-            String content = "Dear [[name]],<br>"
-                    + "Please click the link below to change your password:<br>"
-                    + "<h3><a href=\"[[URL]]\" target=\"_self\">PASSWORD CHANGE</a></h3>"
-                    + "Thank you,<br>"
-                    + "UPES UHS.";
+            String content = """
+            <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Reset Your Password - UPES UHS</title>
+</head>
+<body style="margin:0; padding:0; background-color:#f4f4f4; font-family:'Segoe UI', Roboto, sans-serif; color:#333;">
+  <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td align="center" style="padding: 40px 0;">
+        <table border="0" cellpadding="0" cellspacing="0" width="600" style="background-color:#ffffff; border-radius:8px; overflow:hidden; box-shadow:0 4px 12px rgba(0,0,0,0.1);">
+          <tr>
+            <td align="center" bgcolor="#4f46e5" style="padding:40px 20px;">
+              <h1 style="margin:0; color:#ffffff;">Reset Your Password</h1>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:30px;">
+              <p style="font-size:16px;">Hello <strong>[[name]]</strong>,</p>
+              <p style="font-size:16px; line-height:1.5;">
+                You requested to reset your password. Click the button below to proceed.
+              </p>
+              <p style="text-align:center; margin:30px 0;">
+                <a href="[[URL]]" style="background-color:#4f46e5; color:#ffffff; padding:14px 28px; text-decoration:none; border-radius:6px; display:inline-block; font-size:16px;">
+                  Reset Password
+                </a>
+              </p>
+              <p style="font-size:14px; color:#888;">
+                If you did not request a password reset, please ignore this email or contact support.
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td bgcolor="#f4f4f4" style="padding:20px; text-align:center; font-size:12px; color:#999;">
+              &copy; 2025 UPES UHS. All rights reserved.<br/>
+              UPES University, Bidholi, Dehradun, Uttarakhand 248007<br/>
+              
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
+
+""";
             
             MimeMessage message = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message);
@@ -634,11 +754,55 @@ String htmlContent = """
             String fromAddress = "infirmarytest@gmail.com";
             String senderName = "UPES UHS";
             String subject = "Password Change";
-            String content = "Dear [[name]],<br>"
-                    + "Please click the link below to change your password:<br>"
-                    + "<h3><a href=\"[[URL]]\" target=\"_self\">PASSWORD CHANGE</a></h3>"
-                    + "Thank you,<br>"
-                    + "UPES UHS.";
+            String content = """
+            <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Reset Your Password - UPES UHS</title>
+</head>
+<body style="margin:0; padding:0; background-color:#f4f4f4; font-family:'Segoe UI', Roboto, sans-serif; color:#333;">
+  <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td align="center" style="padding: 40px 0;">
+        <table border="0" cellpadding="0" cellspacing="0" width="600" style="background-color:#ffffff; border-radius:8px; overflow:hidden; box-shadow:0 4px 12px rgba(0,0,0,0.1);">
+          <tr>
+            <td align="center" bgcolor="#4f46e5" style="padding:40px 20px;">
+              <h1 style="margin:0; color:#ffffff;">Reset Your Password</h1>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:30px;">
+              <p style="font-size:16px;">Hello <strong>[[name]]</strong>,</p>
+              <p style="font-size:16px; line-height:1.5;">
+                You requested to reset your password. Click the button below to proceed.
+              </p>
+              <p style="text-align:center; margin:30px 0;">
+                <a href="[[URL]]" style="background-color:#4f46e5; color:#ffffff; padding:14px 28px; text-decoration:none; border-radius:6px; display:inline-block; font-size:16px;">
+                  Reset Password
+                </a>
+              </p>
+              <p style="font-size:14px; color:#888;">
+                If you did not request a password reset, please ignore this email or contact support.
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td bgcolor="#f4f4f4" style="padding:20px; text-align:center; font-size:12px; color:#999;">
+              &copy; 2025 UPES UHS. All rights reserved.<br/>
+              UPES University, Bidholi, Dehradun, Uttarakhand 248007<br/>
+              
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
+""";
+
             
             MimeMessage message = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message);

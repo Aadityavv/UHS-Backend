@@ -51,6 +51,13 @@ import com.infirmary.backend.shared.utility.FunctionUtil;
 
 import lombok.RequiredArgsConstructor;
 
+import jakarta.annotation.PostConstruct;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import java.nio.file.Files;
+import java.io.InputStream;
+import java.io.File;
+
 @Service
 @RequiredArgsConstructor
 public class AdServiceImpl implements ADService{
@@ -121,6 +128,30 @@ public class AdServiceImpl implements ADService{
 
         return ResponseEntity.ok(resp);
     }
+
+    @PostConstruct
+public void initDeletedJsonFile() {
+    try {
+        File tmpFile = new File("/tmp/deleted.json");
+
+        // Only copy if the file doesn't exist already
+        if (!tmpFile.exists()) {
+            Resource resource = new ClassPathResource("Deleted/deleted.json");
+
+            try (InputStream inputStream = resource.getInputStream()) {
+                Files.copy(inputStream, tmpFile.toPath());
+                System.out.println("✅ deleted.json copied to /tmp/ directory.");
+            }
+        } else {
+            System.out.println("✅ deleted.json already exists in /tmp/");
+        }
+
+    } catch (IOException e) {
+        System.err.println("❌ Failed to copy deleted.json to /tmp/");
+        e.printStackTrace();
+    }
+
+}
 
 
     //Get Queue of the Patient which have completed the doctor visit

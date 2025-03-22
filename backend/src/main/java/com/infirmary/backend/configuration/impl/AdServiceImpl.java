@@ -1,8 +1,6 @@
 package com.infirmary.backend.configuration.impl;
 
 import static com.infirmary.backend.shared.utility.FunctionUtil.createSuccessResponse;
-import static com.infirmary.backend.shared.utility.FunctionUtil.saveToJSON;
-
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;

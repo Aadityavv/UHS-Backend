@@ -17,21 +17,13 @@ public class DeleteAptSave {
     private UUID prevAptId;
     private Long timestamp;
     
-    public DeleteAptSave(Appointment appointment) {
+    public DeleteAptSave(Appointment appointment){
         this.patEmail = appointment.getPatient().getEmail();
-        this.docEmail = appointment.getDoctor() != null ? appointment.getDoctor().getDoctorEmail() : null;
+        this.docEmail = appointment.getDoctor() != null ? appointment.getDoctor().getDoctorEmail():null;
         this.reason = appointment.getAptForm().getReason();
         this.locId = appointment.getLocation().getLocId();
-    
-        var aptForm = appointment.getAptForm();
-        var prevApt = aptForm.getPrevAppointment();
-    
-        this.prevAptId = (Boolean.TRUE.equals(aptForm.getIsFollowUp()) && prevApt != null)
-            ? prevApt.getAppointmentId()
-            : null;
-    
+        this.prevAptId = appointment.getAptForm().getIsFollowUp() ? appointment.getAptForm().getPrevAppointment().getAppointmentId():null;
         this.timestamp = appointment.getTimestamp();
     }
-    
 
 }

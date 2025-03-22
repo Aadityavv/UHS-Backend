@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
@@ -29,6 +30,7 @@ import com.infirmary.backend.configuration.model.ADPrescription;
 import com.infirmary.backend.configuration.model.Appointment;
 import com.infirmary.backend.configuration.model.AppointmentForm;
 import com.infirmary.backend.configuration.model.CurrentAppointment;
+import com.infirmary.backend.configuration.model.DeletedAppointment;
 import com.infirmary.backend.configuration.model.Doctor;
 import com.infirmary.backend.configuration.model.Location;
 import com.infirmary.backend.configuration.model.Prescription;
@@ -39,6 +41,7 @@ import com.infirmary.backend.configuration.repository.AdRepository;
 import com.infirmary.backend.configuration.repository.AppointmentFormRepository;
 import com.infirmary.backend.configuration.repository.AppointmentRepository;
 import com.infirmary.backend.configuration.repository.CurrentAppointmentRepository;
+import com.infirmary.backend.configuration.repository.DeletedAppointmentRepository;
 import com.infirmary.backend.configuration.repository.DoctorRepository;
 import com.infirmary.backend.configuration.repository.LocationRepository;
 import com.infirmary.backend.configuration.repository.PatientRepository;
@@ -65,6 +68,8 @@ public class AdServiceImpl implements ADService{
     private final AdRepository adRepository;
     private final PatientRepository patientRepository;
     private final AdPrescriptionRepository adPrescriptionRepository;
+    private final DeletedAppointmentRepository deletedAppointmentRepository;
+    
 
     //Get The queue pending appointment of doctor
     public ResponseEntity<?> getQueue(Double latitude,Double longitude){
@@ -193,9 +198,18 @@ public class AdServiceImpl implements ADService{
 
         if(currentAppointment.getAppointment() == null) throw new ResourceNotFoundException("No Apointment Scheduled");
 
-        saveToJSON(currentAppointment.getAppointment());
+        Appointment appointment = currentAppointment.getAppointment();
 
-        Appointment appointment = appointmentRepository.findByAppointmentId(currentAppointment.getAppointment().getAppointmentId());
+DeletedAppointment deletedAppointment = DeletedAppointment.builder()
+    .appointmentId(appointment.getAppointmentId())
+    .patientName(appointment.getPatient().getName())
+    .patientEmail(appointment.getPatient().getEmail())
+    .reason(appointment.getAptForm() != null ? appointment.getAptForm().getReason() : "No Reason Provided")
+    .deletedAt(LocalDateTime.now())
+    .deletedBy("SYSTEM") // or pass AD email if you have access
+    .build();
+
+    deletedAppointmentRepository.save(deletedAppointment);
 
         if(currentAppointment.getAppointment().getDoctor() == null) AppointmentQueueManager.removeElement(currentAppointment.getAppointment().getAppointmentId());
         else AppointmentQueueManager.removeApptEl(currentAppointment.getAppointment().getAppointmentId());
